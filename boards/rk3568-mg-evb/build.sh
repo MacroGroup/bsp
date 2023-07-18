@@ -19,8 +19,12 @@ BASE=$(dirname -- $(readlink -f -- "$0"))
 ROOT=$BASE/../..
 OUTPUT=$ROOT/output/rk3568-mg-evb
 
-#
-#
-#
+cd $ROOT/modules
+git -C buildroot pull 2&>/dev/null || git clone https://github.com/MacroGroup/buildroot.git
+
+cd $ROOT/modules/buildroot
+git checkout macro
+make defconfig BR2_DEFCONFIG=configs/rk3568_mg_evb_defconfig O=$OUTPUT
+make O=$OUTPUT
 
 exit 0
