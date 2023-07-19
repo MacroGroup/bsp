@@ -19,8 +19,11 @@ BASE=$(dirname -- $(readlink -f -- "$0"))
 ROOT=$BASE/../..
 OUTPUT=$ROOT/output/rk3568-mg-evb
 
+rm -fR $ROOT/output/download/linux
+
 cd $ROOT/modules
-git -C buildroot pull 2&>/dev/null || git clone https://github.com/MacroGroup/buildroot.git
+git -C buildroot pull origin macro 2&>/dev/null || git clone https://github.com/MacroGroup/buildroot.git
+git -C linux pull origin macro 2&>/dev/null || git clone https://github.com/MacroGroup/linux.git
 
 cd $ROOT/modules/buildroot
 git checkout macro
