@@ -1,0 +1,50 @@
+From 29873eb13ad3b239c9b9e4e4c051d8b9b243e097 Mon Sep 17 00:00:00 2001
+From: Alexander Shiyan <eagle.alexander923@gmail.com>
+Date: Wed, 19 Jul 2023 20:40:40 +0300
+Subject: [PATCH 2/4] Fix FUSB302 orientation switch handling
+
+Signed-off-by: Alexander Shiyan <eagle.alexander923@gmail.com>
+---
+ drivers/usb/typec/tcpm/fusb302.c |  2 +-
+ drivers/usb/typec/tcpm/tcpm.c    | 11 ++++++++++-
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/typec/tcpm/fusb302.c b/drivers/usb/typec/tcpm/fusb302.c
+index 62ba53357612..36e1f6c0096e 100644
+--- a/drivers/usb/typec/tcpm/fusb302.c
++++ b/drivers/usb/typec/tcpm/fusb302.c
+@@ -1748,7 +1748,7 @@ static int fusb302_probe(struct i2c_client *client)
+ 	}
+ 
+ 	ret = request_irq(chip->gpio_int_n_irq, fusb302_irq_intn,
+-			  IRQF_ONESHOT | IRQF_TRIGGER_LOW,
++			  IRQF_TRIGGER_LOW,
+ 			  "fsc_interrupt_int_n", chip);
+ 	if (ret < 0) {
+ 		dev_err(dev, "cannot request IRQ for GPIO Int_N, ret=%d", ret);
+diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+index 9f6aaa3e70ca..2bdee1bc3035 100644
+--- a/drivers/usb/typec/tcpm/tcpm.c
++++ b/drivers/usb/typec/tcpm/tcpm.c
+@@ -5458,8 +5458,17 @@ static void tcpm_pd_event_handler(struct kthread_work *work)
+ 		if (events & TCPM_CC_EVENT) {
+ 			enum typec_cc_status cc1, cc2;
+ 
+-			if (port->tcpc->get_cc(port->tcpc, &cc1, &cc2) == 0)
++			if (port->tcpc->get_cc(port->tcpc, &cc1, &cc2) == 0) {
+ 				_tcpm_cc_change(port, cc1, cc2);
++				if (tcpm_port_is_source(port)) {
++					enum typec_cc_polarity polarity =
++						port->cc2 == TYPEC_CC_RD ? TYPEC_POLARITY_CC2
++							 : TYPEC_POLARITY_CC1;
++					tcpm_set_polarity(port, polarity);
++					tcpm_set_roles(port, port->attached, TYPEC_SOURCE,
++						       tcpm_data_role_for_source(port));
++				}
++			}
+ 		}
+ 		if (events & TCPM_FRS_EVENT) {
+ 			if (port->state == SNK_READY) {
+-- 
+2.38.2
+
