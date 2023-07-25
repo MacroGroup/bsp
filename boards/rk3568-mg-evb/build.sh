@@ -23,7 +23,7 @@ cd $ROOT
 git -C buildroot pull origin macro 2&>/dev/null || git clone https://github.com/MacroGroup/buildroot.git
 
 cd $ROOT/buildroot
-git checkout origin/macro || exit 1
+git checkout macro || exit 1
 make defconfig BR2_DEFCONFIG=configs/rk3568_mg_evb_defconfig O=$OUTPUT
 make O=$OUTPUT
 
