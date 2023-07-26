@@ -20,7 +20,7 @@ ROOT=$BASE/../..
 OUTPUT=$ROOT/output/rk3568-mg-evb
 
 cd $ROOT
-git -C buildroot pull origin macro 2&>/dev/null || git clone https://github.com/MacroGroup/buildroot.git
+git -C buildroot pull origin macro 2>/dev/null || git clone https://github.com/MacroGroup/buildroot.git
 
 cd $ROOT/buildroot
 git checkout macro || exit 1
