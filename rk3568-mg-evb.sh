@@ -15,8 +15,7 @@ check_prog()
 
 check_prog git
 
-BASE=$(dirname -- $(readlink -f -- "$0"))
-ROOT=$BASE/..
+ROOT=$(dirname -- $(readlink -f -- "$0"))
 OUTPUT=$ROOT/output/rk3568-mg-evb
 
 cd $ROOT
