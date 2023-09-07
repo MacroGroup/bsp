@@ -5,16 +5,11 @@ if [ $(id -u) == "0" ]; then
 	exit 1
 fi
 
-check_prog()
-{
-	if ! which $1 >/dev/null 2>&1; then
-		echo "Program \"$1\" does not exists!"
+for i in git make; do
+	if ! which $i >/dev/null 2>&1; then
+		echo "Program \"$i\" does not exists!"
 		exit 1
 	fi
-}
-
-for i in git make; do
-	check_prog $i
 done
 
 ROOT=$(dirname -- $(readlink -f -- "$0"))
