@@ -13,7 +13,9 @@ check_prog()
 	fi
 }
 
-check_prog git
+for i in git make; do
+	check_prog $i
+done
 
 ROOT=$(dirname -- $(readlink -f -- "$0"))
 OUTPUT=$ROOT/output/rk3568-mg-evb
