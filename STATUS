@@ -10,7 +10,7 @@ SPI:		Loaded, not tested.
 Ethernet:	Loaded, not tested.
 I2C:		OK.
 PCI-e:		Loaded, not tested.
-PWM:		Loaded, not tested.
+PWM:		OK.
 SAI:		Loaded, not tested.
 UART:		OK.
 eMMC:		OK.
