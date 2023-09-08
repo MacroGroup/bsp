@@ -1,0 +1,43 @@
+--------------------------------------------------------------------------------
+DS-IMX8M-EVB status:
+
+HDMI:		OK.
+USB 2.0 Host:	OK.
+USB 2.0 OTG:	Host mode - OK, Device mode - not tested.
+SPDIF:		Loaded, not tested.
+SPI:		Loaded, not tested.
+Ethernet:	Loaded, not tested.
+I2C:		OK.
+PCI-e:		Loaded, not tested.
+PWM:		Loaded, not tested.
+SAI:		Loaded, not tested.
+UART:		OK.
+eMMC:		OK.
+SD:		OK.
+WDT:		OK.
+Camera AR0234:	Not implemented.
+Camera OV5640:	OK.
+
+Known issues:
+- The MAC address is not fixed (this should probably be fixed in barebox).
+- Sometimes the camera OV5640 is not detected by the I2C-bus. Rebooting
+  the system solves the problem.
+--------------------------------------------------------------------------------
+RK3568-MG-EVB status:
+CAN:		Loaded, not tested.
+PWM:		Loaded, not tested.
+HDMI:		OK.
+Sound ES8388:	OK.
+Sound HDMI:	Loaded, not tested.
+USB 3.0 Host:	OK.
+USB 3.0 OTG:	Host mode - OK, Device mode - not tested.
+Ethernet:	OK.
+I2C:		OK.
+PCI-e 2.0:	Loaded, not tested.
+PCI-e 3.0:	OK.
+eMMC:		OK.
+SD:		OK.
+SPI:		Loaded, not tested.
+UART:		OK.
+Camera XC7160:	Not implemented.
+--------------------------------------------------------------------------------
