@@ -1,6 +1,7 @@
 --------------------------------------------------------------------------------
 DS-IMX8M-EVB status:
 
+GPIO:		Loaded, not tested.
 HDMI:		OK.
 USB 2.0 Host:	OK.
 USB 2.0 OTG:	Host mode - OK, Device mode - not tested.
@@ -24,6 +25,8 @@ Known issues:
   the system solves the problem.
 --------------------------------------------------------------------------------
 RK3568-MG-EVB status:
+
+GPIO:		Loaded, not tested.
 CAN:		Loaded, not tested.
 PWM:		Loaded, not tested.
 HDMI:		OK.
@@ -40,4 +43,5 @@ SD:		OK.
 SPI:		Loaded, not tested.
 UART:		OK.
 Camera XC7160:	Not implemented.
+MIPI DSI:	Not implemented.
 --------------------------------------------------------------------------------
