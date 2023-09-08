@@ -7,7 +7,7 @@ USB 2.0 Host:	OK.
 USB 2.0 OTG:	Host mode - OK, Device mode - not tested.
 SPDIF:		Loaded, not tested.
 SPI:		Loaded, not tested.
-Ethernet:	Loaded, not tested.
+Ethernet:	OK.
 I2C:		OK.
 PCI-e:		Loaded, not tested.
 PWM:		OK.
