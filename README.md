@@ -1,4 +1,4 @@
-This repository contains scripts for creating boot images used for debug boards that use the <a href="https://macrogroup.ru/">MacroGroup</a> <a href="https://diasom.ru/">modules</a>.
+This repository contains scripts for creating boot images used for debug boards based on <a href="https://macrogroup.ru/">MacroGroup</a> <a href="https://diasom.ru/">modules</a>.
 
 To build a DS-IMX8M-EVB image get started with:
 ```bash
