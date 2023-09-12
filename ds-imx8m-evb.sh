@@ -13,7 +13,6 @@ for i in git make; do
 done
 
 ROOT=$(dirname -- $(readlink -f -- "$0"))
-
 cd $ROOT
 
 git fetch || exit 1
