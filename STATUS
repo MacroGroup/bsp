@@ -24,7 +24,7 @@ Known issues:
 - Sometimes the camera OV5640 is not detected by the I2C-bus. Rebooting
   the system solves the problem.
 --------------------------------------------------------------------------------
-RK3568-MG-EVB status:
+DS-RK3568-EVB status:
 
 GPIO:		Loaded, not tested.
 CAN:		Loaded, not tested.
@@ -42,6 +42,6 @@ eMMC:		OK.
 SD:		OK.
 SPI:		Loaded, not tested.
 UART:		OK.
-Camera XC7160:	Not implemented.
 MIPI DSI:	Not implemented.
+Camera XC7160:	Not implemented.
 --------------------------------------------------------------------------------

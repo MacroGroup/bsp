@@ -39,8 +39,8 @@ git -C buildroot pull origin macro 2>/dev/null || git clone https://github.com/M
 cd $ROOT/buildroot
 git checkout macro || exit 1
 
-OUTPUT=$ROOT/output/rk3568-mg-evb
-make defconfig BR2_DEFCONFIG=configs/rk3568_mg_evb_defconfig O=$OUTPUT || exit 1
+OUTPUT=$ROOT/output/ds-rk3568-evb
+make defconfig BR2_DEFCONFIG=configs/diasom_rk3568_evb_defconfig O=$OUTPUT || exit 1
 
 cd $OUTPUT
 make
