@@ -17,7 +17,7 @@ eMMC:		OK.
 SD:		OK.
 WDT:		OK.
 ESP32		Not tested.
-Camera AR0234:	Not implemented.
+Camera AR0234:	OK.
 Camera OV5640:	OK.
 
 Known issues:
