@@ -9,7 +9,7 @@ SPDIF:		Loaded, not tested.
 SPI:		Loaded, not tested.
 Ethernet:	OK.
 I2C:		OK.
-PCI-e:		Loaded, not tested.
+PCI-e:		OK.
 PWM:		OK.
 SAI:		Loaded, not tested.
 UART:		OK.
