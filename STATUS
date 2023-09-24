@@ -24,6 +24,7 @@ Known issues:
 - The MAC address is not fixed (this should probably be fixed in barebox).
 - Sometimes the camera OV5640 is not detected by the I2C-bus. Rebooting
   the system solves the problem.
+- HDMI dispaly is not hotplug detected, i.e. works as Coldplug only.
 --------------------------------------------------------------------------------
 DS-RK3568-EVB status:
 
