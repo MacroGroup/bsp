@@ -16,7 +16,7 @@ UART:		OK.
 eMMC:		OK.
 SD:		OK.
 WDT:		OK.
-ESP32		Not tested.
+ESP32		OK.
 Camera AR0234:	OK.
 Camera OV5640:	OK.
 
