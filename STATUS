@@ -11,7 +11,7 @@ Ethernet:	OK.
 I2C:		OK.
 PCI-e:		OK.
 PWM:		OK.
-SAI:		Loaded, not tested.
+SAI:		Not tested.
 UART:		OK.
 eMMC:		OK.
 SD:		OK.
