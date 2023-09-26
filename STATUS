@@ -5,7 +5,7 @@ GPIO:		OK.
 HDMI:		OK.
 USB 2.0 Host:	OK.
 USB 2.0 OTG:	Host mode - OK, Device mode - not tested.
-SPDIF:		Loaded, not tested.
+SPDIF:		OK.
 SPI:		Loaded, not tested.
 Ethernet:	OK.
 I2C:		OK.
