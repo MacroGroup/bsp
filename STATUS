@@ -26,7 +26,7 @@ Known issues:
 --------------------------------------------------------------------------------
 DS-RK3568-EVB status:
 
-GPIO:		Loaded, not tested.
+GPIO:		OK.
 CAN:		Loaded, not tested.
 PWM:		Loaded, not tested.
 HDMI:		OK.
