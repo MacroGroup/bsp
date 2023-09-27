@@ -21,8 +21,8 @@ Camera AR0234:	OK.
 Camera OV5640:	OK.
 
 Known issues:
-- The MAC address is not fixed (this should probably be fixed in barebox).
-- HDMI dispaly is not hotplug detected, i.e. works as Coldplug only.
+- The MAC address is not fixed (probably, fix should be created in barebox).
+- HDMI dispaly is not hotplug detected, i.e. works as coldplug only.
 --------------------------------------------------------------------------------
 DS-RK3568-EVB status:
 
@@ -36,12 +36,12 @@ USB 3.0 Host:	OK.
 USB 3.0 OTG:	Host mode - OK, Device mode - not tested.
 Ethernet:	OK.
 I2C:		OK.
-PCI-e 2.0:	OK.
+PCI-e 2.0:	OK5.
 PCI-e 3.0:	OK.
 eMMC:		OK.
 SD:		OK.
 SPI:		OK.
 UART:		OK.
-MIPI DSI:	Not implemented.
+MIPI DSI:	Not tested.
 Camera XC7160:	Not implemented.
 --------------------------------------------------------------------------------
