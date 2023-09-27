@@ -40,7 +40,7 @@ PCI-e 2.0:	OK.
 PCI-e 3.0:	OK.
 eMMC:		OK.
 SD:		OK.
-SPI:		Loaded, not tested.
+SPI:		OK.
 UART:		OK.
 MIPI DSI:	Not implemented.
 Camera XC7160:	Not implemented.
