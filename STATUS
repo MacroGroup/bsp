@@ -36,7 +36,7 @@ USB 3.0 Host:	OK.
 USB 3.0 OTG:	Host mode - OK, Device mode - not tested.
 Ethernet:	OK.
 I2C:		OK.
-PCI-e 2.0:	OK5.
+PCI-e 2.0:	OK.
 PCI-e 3.0:	OK.
 eMMC:		OK.
 SD:		OK.
