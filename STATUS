@@ -45,3 +45,6 @@ UART:		OK.
 MIPI DSI:	Loaded, not tested.
 Camera XC7160:	Not implemented.
 --------------------------------------------------------------------------------
+
+Known issues:
+- The MAC address is not fixed.
