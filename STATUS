@@ -42,6 +42,6 @@ eMMC:		OK.
 SD:		OK.
 SPI:		OK.
 UART:		OK.
-MIPI DSI:	Not tested.
+MIPI DSI:	Loaded, not tested.
 Camera XC7160:	Not implemented.
 --------------------------------------------------------------------------------
