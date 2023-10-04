@@ -43,6 +43,7 @@ SD:		OK.
 SPI:		OK.
 UART:		OK.
 MIPI DSI:	Loaded, not tested.
+MIPI LVDS:	Not implemented.
 Camera XC7160:	Not implemented.
 --------------------------------------------------------------------------------
 
