@@ -23,6 +23,7 @@ Camera OV5640:	OK.
 Known issues:
 - The MAC address is not fixed (probably, fix should be created in barebox).
 - HDMI dispaly is not hotplug detected, i.e. works as coldplug only.
+
 --------------------------------------------------------------------------------
 DS-RK3568-EVB status:
 
@@ -45,7 +46,8 @@ UART:		OK.
 MIPI DSI:	Loaded, not tested.
 MIPI LVDS:	Not implemented.
 Camera XC7160:	Not implemented.
---------------------------------------------------------------------------------
 
 Known issues:
 - The MAC address is not fixed.
+
+--------------------------------------------------------------------------------
