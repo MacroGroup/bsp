@@ -46,6 +46,7 @@ UART:		OK.
 MIPI DSI:	Loaded, not tested.
 MIPI LVDS:	Not implemented.
 Camera XC7160:	Not implemented.
+Camera IMX335:	Not tested.
 
 Known issues:
 - The MAC address is not fixed.
