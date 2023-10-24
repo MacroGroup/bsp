@@ -21,7 +21,6 @@ Camera AR0234:	OK.
 Camera OV5640:	OK.
 
 Known issues:
-- The MAC address is not fixed (probably, fix should be created in barebox).
 - HDMI dispaly is not hotplug detected, i.e. works as coldplug only.
 
 --------------------------------------------------------------------------------
