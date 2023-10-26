@@ -4,7 +4,7 @@ DS-IMX8M-EVB status:
 GPIO:		OK.
 HDMI:		OK.
 USB 2.0 Host:	OK.
-USB 2.0 OTG:	Host mode - OK, Device mode - not tested.
+USB 2.0 OTG:	Host mode - OK, Device mode - OK.
 SPDIF:		OK.
 SPI:		OK.
 Ethernet:	OK.
