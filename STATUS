@@ -47,7 +47,4 @@ MIPI LVDS:	Not implemented.
 Camera XC7160:	OK.
 Camera IMX335:	Not tested.
 
-Known issues:
-- The MAC address is not fixed.
-
 --------------------------------------------------------------------------------
