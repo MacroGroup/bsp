@@ -31,7 +31,7 @@ CAN:		Loaded, not tested.
 PWM:		OK.
 HDMI:		OK.
 Sound ES8388:	OK.
-Sound HDMI:	Loaded, not tested.
+Sound HDMI:	OK.
 USB 3.0 Host:	OK.
 USB 3.0 OTG:	Host mode - OK, Device mode - not tested.
 Ethernet:	OK.
