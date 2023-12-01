@@ -45,6 +45,6 @@ UART:		OK.
 MIPI DSI:	Loaded, not tested.
 MIPI LVDS:	Not implemented.
 Camera XC7160:	OK.
-Camera IMX335:	Not tested.
+Camera IMX335:	OK.
 
 --------------------------------------------------------------------------------
