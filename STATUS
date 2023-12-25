@@ -43,7 +43,7 @@ SD:		OK.
 SPI:		OK.
 UART:		OK.
 MIPI DSI:	OK.
-MIPI LVDS:	Not implemented.
+MIPI LVDS:	OK.
 Camera XC7160:	OK.
 Camera IMX335:	OK.
 
