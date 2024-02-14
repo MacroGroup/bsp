@@ -22,6 +22,7 @@ Camera OV5640:	OK.
 
 Known issues:
 - HDMI dispaly is not hotplug detected, i.e. works as coldplug only.
+- MT76 PCI-e driver is not functional.
 
 --------------------------------------------------------------------------------
 DS-RK3568-EVB status:
