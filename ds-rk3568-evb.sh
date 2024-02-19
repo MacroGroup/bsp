@@ -34,7 +34,7 @@ if [ $LOCAL != $REMOTE ]; then
 	exit 1
 fi
 
-git -C buildroot pull origin macro 2>/dev/null || git clone https://github.com/MacroGroup/buildroot.git
+git -C buildroot pull --rebase origin macro 2>/dev/null || git clone https://github.com/MacroGroup/buildroot.git
 
 cd $ROOT/buildroot
 git checkout macro || exit 1

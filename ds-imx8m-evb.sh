@@ -34,12 +34,10 @@ if [ $LOCAL != $REMOTE ]; then
 	exit 1
 fi
 
-REV=fdef407cb2
-
-git -C buildroot pull origin macro 2>/dev/null || git clone https://github.com/MacroGroup/buildroot.git
+git -C buildroot pull --rebase origin macro 2>/dev/null || git clone https://github.com/MacroGroup/buildroot.git
 
 cd $ROOT/buildroot
-git checkout $REV || exit 1
+git checkout macro || exit 1
 
 OUTPUT=$ROOT/output/ds-imx8m-evb
 make defconfig BR2_DEFCONFIG=configs/diasom_imx8m_evb_defconfig O=$OUTPUT || exit 1
