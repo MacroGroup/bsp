@@ -1,0 +1,47 @@
+Сборка и запуск Zephyr RTOS на платформе RK3568:
+
+1. Переходим в директорию где будут находится рабочие файлы:
+	cd bsp
+
+2. Создаём директорию для Zephyr и переходим в неё:
+	mkdir zephyrproject
+	cd zephyrproject
+
+3. Устанавливаем библиотеку python для создания виртуальной среды:
+	pip install --user virtualenv
+
+4. Создаём новую виртуальную среду и активируем её:
+	python3 -m venv .venv
+	source .venv/bin/activate
+
+5. Устанавливаем систему сборки, код Zephyr и необходимые модули:
+	pip install west
+	west init .
+	west update
+	west zephyr-export
+	pip install -r zephyr/scripts/requirements.txt
+
+6. Устанавливаем и настраиваем Zephyr SDK:
+	wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.5-1/zephyr-sdk-0.16.5-1_linux-x86_64.tar.xz
+	tar xvf zephyr-sdk-0.16.5-1_linux-x86_64.tar.xz
+	cd zephyr-sdk-0.16.5-1
+	./setup.sh -h -c
+	cd ..
+
+7. Собираем Zephyr RTOS с тестовой программой:
+	cd zephyr
+	west build -b roc_rk3568_pc//smp samples/synchronization
+	cd ..
+
+8. Деактивируем виртуальную среду:
+	deactivate
+
+9. Полученный рабочий образ "zephyr/build/zephyr/zephyr.bin" необходимо скопировать
+   на SD-карту или USB-flashdisk в раздел типа FAT или EXT2.
+
+10. После запуска barebox (https://github.com/MacroGroup/barebox),
+    смонтируйте раздел в котором находится образ Zephyr и выполните
+    запуск с помощью скрипта run-binary, например так:
+	mkdir /mnt/zephyr
+	mount /dev/mmc0.3 /mnt/zephyr
+	run-binary -f /mnt/zephyr/zephyr.bin -a 0x40000000
