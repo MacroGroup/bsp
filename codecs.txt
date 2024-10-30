@@ -3,7 +3,7 @@ RK3568:
 		2  - JPEG:	OK
 		3  - H.264:	No information about support.
 
-	VDPU121@fdea0400:	Driver "vpu": K
+	VDPU121@fdea0400:	Driver "vpu": OK
 		0  - H.264:	OK
 		1  - MPEG-4
 		2  - H.263
