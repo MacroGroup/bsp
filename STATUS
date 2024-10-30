@@ -45,7 +45,9 @@ SPI:		OK.
 UART:		OK.
 MIPI DSI:	OK.
 MIPI LVDS:	OK.
-NPU:		Not supported.
+NPU:		Not implemented.
+ISP:		OK.
+CIF:		Not implemented.
 Camera XC7160:	OK.
 Camera IMX335:	OK.
 Camera AR0233:	OK.
