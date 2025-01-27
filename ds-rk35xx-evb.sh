@@ -40,7 +40,7 @@ cd $ROOT/buildroot
 git checkout macro || exit 1
 
 OUTPUT=$ROOT/output/ds-rk35xx-evb
-make defconfig BR2_DEFCONFIG=configs/diasom_rk3568_evb_defconfig O=$OUTPUT || exit 1
+make defconfig BR2_DEFCONFIG=configs/diasom_rk35xx_evb_defconfig O=$OUTPUT || exit 1
 
 cd $OUTPUT
 make
