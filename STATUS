@@ -47,10 +47,11 @@ MIPI DSI:	OK.
 MIPI LVDS:	OK.
 NPU:		Not implemented.
 ISP:		OK.
-CIF:		Not implemented.
-Camera XC7160:	OK.
-Camera IMX335:	OK.
+CIF:		Testing.
 Camera AR0233:	OK.
+Camera IMX335:	OK.
+Camera IMX415:	OK.
+Camera XC7160:	OK.
 
 --------------------------------------------------------------------------------
 DS-RK3588-EVB status:
