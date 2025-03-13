@@ -56,15 +56,15 @@ Camera XC7160:	OK.
 --------------------------------------------------------------------------------
 DS-RK3588-EVB status:
 
-GPIO:		-
+GPIO:		OK.
 eMMC:		-
-SD:		-
+SD:		OK.
 UART:		-
 Eth RTL8211:	-
 Eth RTL8125:	-
 PCI-e 3.0:	-
 ISP:		-
-HDMI TX:	-
+HDMI TX:	OK.
 HDMI RX:	-
 LVDS:		-
 TypeC0 OTG:	-
