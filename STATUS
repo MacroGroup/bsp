@@ -67,9 +67,9 @@ ISP:		-
 HDMI TX:	OK.
 HDMI RX:	-
 LVDS:		-
-TypeC0 OTG:	-
-TypeC1 Host:	-
-USB3.0 Host:	-
-USB2.0 Host:	-
+TypeC0 OTG:	OK (Partially).
+TypeC1 Host:	OK.
+USB3.0 Host:	OK.
+USB2.0 Host:	OK.
 
 --------------------------------------------------------------------------------
