@@ -60,7 +60,7 @@ GPIO:		OK.
 eMMC:		Not tested.
 SD:		OK.
 Eth RTL8211:	Not tested.
-Eth RTL8125:	Not tested.
+Eth RTL8125:	OK.
 PCI-e 3.0:	OK.
 ISP:		Not implemented.
 HDMI TX:	OK.
