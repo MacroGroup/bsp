@@ -2,7 +2,7 @@ This repository contains scripts for creating boot images used for debug boards 
 The build system includes the following components (<b>Versions may differ for different boards</b>):
 <li><a href="https://barebox.org/">barebox</a> 2025.03.0</li>
 <li><a href="https://buildroot.org/">buildroot</a> 2024.11</li>
-<li><a href="https://kernel.org/">kernel</a> 6.13</li>
+<li><a href="https://kernel.org/">kernel</a> 6.14</li>
 
 ##
 To build a <b>DS-IMX8M-EVB</b> image get started with:
