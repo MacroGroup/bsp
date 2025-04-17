@@ -14,7 +14,7 @@ cd bsp
 After the script completes, the finished SD-card image will be located in the output/ds-imx8m-evb/images directory.
 
 ##
-To build a <b>DS-RK3568-EVB</b> or <b>DS-RK3588-EVB</b> image get started with:
+To build a <b>DS-RK3568-EVB</b>, <b>DS-RK3568-SMARC-EVB</b> or <b>DS-RK3588-EVB</b> image get started with:
 ```bash
 git clone https://github.com/MacroGroup/bsp.git
 cd bsp
