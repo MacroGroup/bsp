@@ -1,48 +1,103 @@
 #!/bin/bash
 
-if [ $(id -u) == "0" ]; then
-	echo "This must be executed without root privilegies!"
+if [ -t 1 ]; then
+	COLOR_RED='\033[0;31m'
+	COLOR_YELLOW='\033[0;33m'
+	COLOR_GREEN='\033[0;32m'
+	COLOR_CYAN='\033[0;36m'
+	COLOR_BLUE='\033[0;34m'
+	COLOR_RESET='\033[0m'
+else
+	COLOR_RED=""
+	COLOR_YELLOW=""
+	COLOR_GREEN=""
+	COLOR_CYAN=""
+	COLOR_BLUE=""
+	COLOR_RESET=""
+fi
+
+if [ "$(id -u)" = "0" ]; then
+	echo -e "${COLOR_RED}This must be executed without root privileges!${COLOR_RESET}" >&2
 	exit 1
 fi
 
-for i in git make; do
-	if ! which $i >/dev/null 2>&1; then
-		echo "Program \"$i\" does not exists!"
+dependencies=(git make)
+for cmd in "${dependencies[@]}"; do
+	if ! command -v "$cmd" >/dev/null 2>&1; then
+		echo -e "${COLOR_RED}Error: Required command '$cmd' not found${COLOR_RESET}" >&2
 		exit 1
 	fi
 done
 
-ROOT=$(dirname -- $(readlink -f -- "$0"))
-cd $ROOT
+script_path=$(readlink -f -- "$0")
+ROOT=$(dirname -- "$script_path")
 
-git fetch || exit 1
+GIT=MacroGroup
+BRANCH=macro
+DEFCONFIG=diasom_rk35xx_evb_defconfig
+OUTDIR=ds-rk35xx-evb
 
-UPSTREAM="origin/master"
-LOCAL=$(git rev-parse @)
-REMOTE=$(git rev-parse $UPSTREAM)
-BASE=$(git merge-base @ $UPSTREAM)
+cd "$ROOT" || exit 1
 
-if [ $LOCAL != $REMOTE ]; then
-	if [ $LOCAL = $BASE ]; then
-		echo "The local BSP branch lags behind the remote one!"
-		echo "Do a 'git pull' first, then re-run $0."
-	elif [ $REMOTE = $BASE ]; then
-		echo "Local BSP branch overtakes remote! Probaly needs a push."
-	else
-		echo "Local and remote BSP branches are diverge!"
+if [ -d ".git" ]; then
+	echo -e "${COLOR_CYAN}Checking repository status...${COLOR_RESET}"
+
+	if ! git fetch; then
+		echo -e "${COLOR_RED}Error: Failed to fetch from remote repository${COLOR_RESET}" >&2
+		exit 1
 	fi
-	exit 1
+
+	UPSTREAM=$(git rev-parse --abbrev-ref @{u} 2>/dev/null)
+
+	if [ -z "$UPSTREAM" ]; then
+		echo -e "${COLOR_YELLOW}Warning: No upstream branch configured for the current repository${COLOR_RESET}"
+	else
+		LOCAL=$(git rev-parse @)
+		REMOTE=$(git rev-parse "$UPSTREAM")
+		BASE=$(git merge-base @ "$UPSTREAM")
+
+		if [ "$LOCAL" != "$REMOTE" ]; then
+			if [ "$LOCAL" = "$BASE" ]; then
+				echo -e "${COLOR_RED}The local branch lags behind the remote one!${COLOR_RESET}"
+				echo -e "${COLOR_YELLOW}Do a 'git pull' first, then re-run $0.${COLOR_RESET}"
+			elif [ "$REMOTE" = "$BASE" ]; then
+				echo -e "${COLOR_YELLOW}Local branch overtakes remote! Probably needs a push.${COLOR_RESET}"
+			else
+				echo -e "${COLOR_RED}Local and remote branches are diverged!${COLOR_RESET}"
+			fi
+			exit 1
+		else
+			echo -e "${COLOR_GREEN}Repository is up-to-date with upstream.${COLOR_RESET}"
+		fi
+	fi
+else
+	echo -e "${COLOR_YELLOW}Warning: Current directory is not a git repository, skipping repository checks${COLOR_RESET}"
 fi
 
-git -C buildroot pull --rebase origin macro 2>/dev/null || git clone https://github.com/MacroGroup/buildroot.git
+echo -e "${COLOR_CYAN}Processing buildroot repository...${COLOR_RESET}"
+if [ -d "$ROOT/buildroot/.git" ]; then
+	echo -e "${COLOR_BLUE}Updating buildroot repository...${COLOR_RESET}"
+	git -C "$ROOT/buildroot" pull --rebase origin $BRANCH || exit 1
+	echo -e "${COLOR_GREEN}Buildroot repository updated successfully.${COLOR_RESET}"
+else
+	echo -e "${COLOR_BLUE}Cloning buildroot repository...${COLOR_RESET}"
+	git clone -b $BRANCH https://github.com/$GIT/buildroot.git "$ROOT/buildroot" || exit 1
+	echo -e "${COLOR_GREEN}Buildroot repository cloned successfully.${COLOR_RESET}"
+fi
 
-cd $ROOT/buildroot
-git checkout macro || exit 1
+echo -e "${COLOR_CYAN}Starting build process...${COLOR_RESET}"
+cd "$ROOT/buildroot" || exit 1
+OUTPUT="$ROOT/output/$OUTDIR"
 
-OUTPUT=$ROOT/output/ds-rk35xx-evb
-make defconfig BR2_DEFCONFIG=configs/diasom_rk35xx_evb_defconfig O=$OUTPUT || exit 1
+echo -e "${COLOR_BLUE}Configuring build...${COLOR_RESET}"
+make defconfig BR2_DEFCONFIG=configs/$DEFCONFIG O="$OUTPUT" || exit 1
+echo -e "${COLOR_GREEN}Configuration completed successfully.${COLOR_RESET}"
 
-cd $OUTPUT
-make
-
-exit 0
+echo -e "${COLOR_BLUE}Building project...${COLOR_RESET}"
+cd "$OUTPUT" || exit 1
+if make; then
+	echo -e "${COLOR_GREEN}Build completed successfully!${COLOR_RESET}"
+else
+	echo -e "${COLOR_RED}Build failed!${COLOR_RESET}" >&2
+	exit 1
+fi
