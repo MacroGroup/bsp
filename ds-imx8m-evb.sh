@@ -32,10 +32,11 @@ done
 script_path=$(readlink -f -- "$0")
 ROOT=$(dirname -- "$script_path")
 
-GIT=MacroGroup
+GIT=https://github.com/MacroGroup
 BRANCH=macro
+REPO=buildroot
 DEFCONFIG=diasom_imx8m_evb_defconfig
-OUTDIR=ds-imx8m-evb
+OUTPUT="$ROOT/output/ds-imx8m-evb"
 
 cd "$ROOT" || exit 1
 
@@ -74,20 +75,19 @@ else
 	echo -e "${COLOR_YELLOW}Warning: Current directory is not a git repository, skipping repository checks${COLOR_RESET}"
 fi
 
-echo -e "${COLOR_CYAN}Processing buildroot repository...${COLOR_RESET}"
+echo -e "${COLOR_CYAN}Processing $REPO repository...${COLOR_RESET}"
 if [ -d "$ROOT/buildroot/.git" ]; then
-	echo -e "${COLOR_BLUE}Updating buildroot repository...${COLOR_RESET}"
-	git -C "$ROOT/buildroot" pull --rebase origin $BRANCH || exit 1
-	echo -e "${COLOR_GREEN}Buildroot repository updated successfully.${COLOR_RESET}"
+	echo -e "${COLOR_BLUE}Updating $REPO repository...${COLOR_RESET}"
+	git -C "$ROOT/$REPO" pull --rebase origin $BRANCH || exit 1
+	echo -e "${COLOR_GREEN}Repository $REPO updated successfully.${COLOR_RESET}"
 else
-	echo -e "${COLOR_BLUE}Cloning buildroot repository...${COLOR_RESET}"
-	git clone -b $BRANCH https://github.com/$GIT/buildroot.git "$ROOT/buildroot" || exit 1
-	echo -e "${COLOR_GREEN}Buildroot repository cloned successfully.${COLOR_RESET}"
+	echo -e "${COLOR_BLUE}Cloning $REPO repository...${COLOR_RESET}"
+	git clone -b $BRANCH $GIT/$REPO.git "$ROOT/$REPO" || exit 1
+	echo -e "${COLOR_GREEN}Repository $REPO cloned successfully.${COLOR_RESET}"
 fi
 
 echo -e "${COLOR_CYAN}Starting build process...${COLOR_RESET}"
-cd "$ROOT/buildroot" || exit 1
-OUTPUT="$ROOT/output/$OUTDIR"
+cd "$ROOT/$REPO" || exit 1
 
 echo -e "${COLOR_BLUE}Configuring build...${COLOR_RESET}"
 make defconfig BR2_DEFCONFIG=configs/$DEFCONFIG O="$OUTPUT" || exit 1
