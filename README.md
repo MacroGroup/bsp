@@ -1,11 +1,18 @@
-This repository contains scripts for creating boot images used for debug boards based on <a href="https://macrogroup.ru/">MacroGroup</a> <a href="https://diasom.ru/">modules</a>.<br>
-The build system includes the following components (<b>Versions may differ for different boards</b>):
-<li><a href="https://barebox.org/">barebox</a> 2025.04.0</li>
-<li><a href="https://buildroot.org/">buildroot</a> 2025.02</li>
-<li><a href="https://kernel.org/">kernel</a> 6.14</li>
+# Boot Image Build System for MacroGroup Modules
 
-##
-To build a <b>DS-IMX8M-EVB</b> image get started with:
+This repository contains scripts for creating boot images used with debug boards based on [MacroGroup](https://macrogroup.ru/) [DiaSom modules](https://diasom.ru/).
+
+## Build System Components
+*(Versions may vary per board)*
+- [barebox](https://barebox.org/) 2025.04.0
+- [buildroot](https://buildroot.org/) 2025.02
+- [Linux kernel](https://kernel.org/) 6.14
+
+---
+
+## Building Images
+
+### For DS-IMX8M-EVB:
 ```bash
 git clone https://github.com/MacroGroup/bsp.git
 cd bsp
@@ -13,8 +20,7 @@ cd bsp
 ```
 After the script completes, the finished SD-card image will be located in the output/ds-imx8m-evb/images directory.
 
-##
-To build a <b>DS-RK3568-EVB</b>, <b>DS-RK3568-SMARC-EVB</b> or <b>DS-RK3588-EVB</b> image get started with:
+### For DS-RK3568-EVB, DS-RK3568-SMARC-EVB or DS-RK3588-EVB:
 ```bash
 git clone https://github.com/MacroGroup/bsp.git
 cd bsp
