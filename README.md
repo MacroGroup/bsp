@@ -29,5 +29,5 @@ cd bsp
 SD-card image created after successful build in the output/ds-rk35xx-evb/images directory.
 
 ## Notes
-⏱️ Build times vary significantly (30 mins - several hours) depending on hardware
+⏱️ Build times vary significantly (30 mins - several hours) depending on hardware  
 💾 Output images ready for SD card writing with `dd` or [BalenaEtcher](https://www.balena.io/etcher/)
