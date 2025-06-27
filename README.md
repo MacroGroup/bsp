@@ -4,9 +4,9 @@ This repository contains scripts for creating boot images used with debug boards
 
 ## Build System Components
 *(Component versions may vary per board)*
-- [barebox](https://barebox.org/) 2025.04.0
+- [barebox](https://barebox.org/) 2025.05.0
 - [buildroot](https://buildroot.org/) 2025.02
-- [Linux kernel](https://kernel.org/) 6.14
+- [Linux kernel](https://kernel.org/) 6.15
 
 ---
 
@@ -20,7 +20,7 @@ cd bsp
 ```
 SD-card image created after successful build in the output/ds-imx8m-evb/images directory.
 
-### For DS-RK3568-EVB, DS-RK3568-SMARC-EVB or DS-RK3588-EVB:
+### For DS-RK3568-EVB, DS-RK3568-SMARC-EVB, DS-RK3568-SODIMM-EVB or DS-RK3588-EVB:
 ```bash
 git clone https://github.com/MacroGroup/bsp.git
 cd bsp
