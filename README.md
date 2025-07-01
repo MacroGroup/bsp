@@ -4,7 +4,7 @@ This repository contains scripts for creating boot images used with debug boards
 
 ## Build System Components
 *(Component versions may vary per board)*
-- [barebox](https://barebox.org/) 2025.05.0
+- [barebox](https://barebox.org/) 2025.06.1
 - [buildroot](https://buildroot.org/) 2025.02
 - [Linux kernel](https://kernel.org/) 6.15
 
