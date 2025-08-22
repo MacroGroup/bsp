@@ -48,7 +48,7 @@ if [ -d ".git" ]; then
 		exit 1
 	fi
 
-	UPSTREAM=$(git rev-parse --abbrev-ref @{u} 2>/dev/null)
+	UPSTREAM=$(git rev-parse --abbrev-ref "@{u}" 2>/dev/null)
 
 	if [ -z "$UPSTREAM" ]; then
 		echo -e "${COLOR_YELLOW}Warning: No upstream branch configured for the current repository${COLOR_RESET}"
