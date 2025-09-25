@@ -57,7 +57,7 @@ Camera XC7160:	OK.
 DS-RK3588-EVB status:
 
 GPIO:		OK.
-eMMC:		Not tested.
+eMMC:		OK.
 SD:		OK.
 Eth RTL8211:	Not tested.
 Eth RTL8125:	OK.
