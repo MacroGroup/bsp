@@ -62,9 +62,9 @@ SD:		OK.
 Eth RTL8211:	Not tested.
 Eth RTL8125:	OK.
 PCI-e 3.0:	OK.
-ISP:		Not implemented.
+ISP:		Not tested.
 HDMI TX:	OK.
-HDMI RX:	Not implemented.
+HDMI RX:	Not tested.
 LVDS:		OK.
 TypeC0 OTG:	OK (Partially).
 TypeC1 Host:	OK.
