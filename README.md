@@ -20,7 +20,7 @@ cd bsp
 ```
 SD-card image created after successful build in the output/ds-imx8m-evb/images directory.
 
-### For DS-RK3568-EVB, DS-RK3568-SMARC-EVB, DS-RK3568-SODIMM-EVB, DS-RK3588-BTB-EVB or DS-RK3588-SMARC-EVB:
+### For DS-RK3568-EVB or DS-RK3588-BTB-EVB:
 ```bash
 git clone https://github.com/MacroGroup/bsp.git
 cd bsp
