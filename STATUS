@@ -28,7 +28,7 @@ Known issues:
 DS-RK3568-EVB status:
 
 GPIO:		OK.
-CAN:		Not tested.
+CAN:		OK.
 PWM:		OK.
 HDMI:		OK.
 Sound ES8388:	OK.
@@ -70,5 +70,6 @@ TypeC0 OTG:	OK (Partially).
 TypeC1 Host:	OK.
 USB3.0 Host:	OK.
 USB2.0 Host:	OK.
+NPU:		Not tested.
 
 --------------------------------------------------------------------------------
