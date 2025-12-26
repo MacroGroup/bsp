@@ -31,7 +31,6 @@ cd bsp
 SD-card image created after successful build in the output/ds-rk35xx-evb/images directory.
 
 ## Notes
-
 - **Ensure you have at least 50 GB of free disk space** for the build.
 - **Build times vary significantly** (30 minutes to several hours) depending on hardware specifications
 - **All output images are ready for direct writing to SD cards** using tools like:
