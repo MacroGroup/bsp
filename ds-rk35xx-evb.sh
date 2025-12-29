@@ -96,7 +96,6 @@ echo -e "${COLOR_GREEN}Configuration completed successfully.${COLOR_RESET}"
 echo -e "${COLOR_BLUE}Building project...${COLOR_RESET}"
 cd "$OUTPUT" || exit 1
 
-export CMAKE_POLICY_VERSION_MINIMUM=3.5
 if make; then
 	echo -e "${COLOR_GREEN}Build completed successfully!${COLOR_RESET}"
 else
