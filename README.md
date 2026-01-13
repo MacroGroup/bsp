@@ -13,7 +13,6 @@ This repository contains scripts for creating boot images used with debug boards
 ## Building Images
 
 ### For DS-IMX8M-EVB:
-$\color{red}{\text{Note: Building with host GCC>=15 currently is not possible!}}$
 ```bash
 git clone https://github.com/MacroGroup/bsp.git
 cd bsp
@@ -22,7 +21,6 @@ cd bsp
 SD-card image created after successful build in the output/ds-imx8m-evb/images directory.
 
 ### For DS-RK3568-EVB or DS-RK3588-BTB-EVB:
-$\color{red}{\text{Note: Building with host GCC>=15 currently is not possible!}}$
 ```bash
 git clone https://github.com/MacroGroup/bsp.git
 cd bsp
