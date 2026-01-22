@@ -49,6 +49,7 @@ NPU:		Not implemented.
 ISP:		OK.
 CIF:		Testing.
 Camera AR0233:	OK.
+Camera IMX327:	OK.
 Camera IMX335:	OK.
 Camera IMX415:	OK.
 Camera XC7160:	OK.
