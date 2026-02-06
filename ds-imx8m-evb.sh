@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# SPDX-License-Identifier: GPL-2.0+
+# SPDX-FileCopyrightText: Alexander Shiyan <shc_work@mail.ru>
 
 if [ -t 1 ]; then
 	COLOR_RED='\033[0;31m'
@@ -21,12 +23,53 @@ if [ "$(id -u)" = "0" ]; then
 	exit 1
 fi
 
-dependencies=(git make)
+dependencies=(cut git grep head make)
 for cmd in "${dependencies[@]}"; do
 	if ! command -v "$cmd" >/dev/null 2>&1; then
 		echo -e "${COLOR_RED}Error: Required command '$cmd' not found${COLOR_RESET}" >&2
 		exit 1
 	fi
+done
+
+show_help() {
+	echo "Usage: $0 [OPTIONS]"
+	echo ""
+	echo "Options:"
+	echo "  -h, --help           Show this help message"
+	echo "  -b, --board NAME     Set board name and create board.cfg"
+	echo ""
+	echo "If -b option is provided, creates board.cfg with BOARD_NAME=value"
+
+	exit 0
+}
+
+get_board_from_cfg() {
+	local cfg_file="$1"
+	if [[ -f "$cfg_file" ]]; then
+		grep -E '^BOARD_NAME=' "$cfg_file" | head -1 | cut -d'=' -f2-
+	fi
+}
+
+BOARD_NAME=""
+while [[ $# -gt 0 ]]; do
+	case $1 in
+		-h|--help)
+			show_help
+			;;
+		-b|--board)
+			if [[ -z "$2" || "$2" =~ ^- ]]; then
+				echo -e "${COLOR_RED}Error: Board name is required for -b option${COLOR_RESET}" >&2
+				exit 1
+			fi
+			BOARD_NAME="$2"
+			shift 2
+			;;
+		*)
+			echo -e "${COLOR_RED}Error: Unknown option: $1${COLOR_RESET}" >&2
+			echo "Use -h for help"
+			exit 1
+			;;
+	esac
 done
 
 script_path=$(readlink -f -- "$0")
@@ -37,6 +80,39 @@ BRANCH=macro
 REPO=buildroot
 DEFCONFIG=diasom_imx8m_evb_defconfig
 OUTPUT="$ROOT/output/ds-imx8m-evb"
+BOARD_CFG="$OUTPUT/board.cfg"
+
+mkdir -p "$OUTPUT"
+
+if [[ -n "$BOARD_NAME" ]]; then
+	CURRENT_BOARD=$(get_board_from_cfg "$BOARD_CFG")
+
+	if [[ -f "$BOARD_CFG" ]]; then
+		if [[ "$CURRENT_BOARD" == "$BOARD_NAME" ]]; then
+			echo -e "${COLOR_GREEN}Board name '$BOARD_NAME' matches existing configuration.${COLOR_RESET}"
+		else
+			echo -e "${COLOR_RED}Error: Board name mismatch!${COLOR_RESET}" >&2
+			echo -e "${COLOR_RED}Existing board: $CURRENT_BOARD${COLOR_RESET}" >&2
+			echo -e "${COLOR_RED}Requested board: $BOARD_NAME${COLOR_RESET}" >&2
+			echo -e "${COLOR_YELLOW}Please remove $BOARD_CFG manually or use the correct board name${COLOR_RESET}" >&2
+			exit 1
+		fi
+	else
+		echo "BOARD_NAME=$BOARD_NAME" > "$BOARD_CFG"
+		echo -e "${COLOR_GREEN}Board name set to: $BOARD_NAME${COLOR_RESET}"
+		echo -e "${COLOR_GREEN}Configuration saved to: $BOARD_CFG${COLOR_RESET}"
+	fi
+elif [[ -f "$BOARD_CFG" ]]; then
+	echo -e "${COLOR_RED}Error: board.cfg already exists at $BOARD_CFG${COLOR_RESET}" >&2
+	CURRENT_BOARD=$(get_board_from_cfg "$BOARD_CFG")
+	if [[ -n "$CURRENT_BOARD" ]]; then
+		echo -e "${COLOR_YELLOW}Current board name: $CURRENT_BOARD${COLOR_RESET}" >&2
+	fi
+	echo -e "${COLOR_YELLOW}Please remove it manually or use -b option to specify a board name${COLOR_RESET}" >&2
+	exit 1
+else
+	echo -e "${COLOR_YELLOW}No board.cfg found, using default configuration.${COLOR_RESET}"
+fi
 
 cd "$ROOT" || exit 1
 

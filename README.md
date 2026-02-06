@@ -24,9 +24,31 @@ SD-card image created after successful build in the output/ds-imx8m-evb/images d
 ```bash
 git clone https://github.com/MacroGroup/bsp.git
 cd bsp
-./ds-rk35xx-evb.sh
+```
+First build - specify your board type:
+```bash
+# For DS-RK3568-EVB board:
+./ds-rk35xx-evb.sh -b ds-rk3568-evb
+
+# For DS-RK3588-BTB-EVB board:
+./ds-rk35xx-evb.sh -b ds-rk3588-btb-evb
+```
+Subsequent builds (with existing configuration):
+```bash
+./ds-rk35xx-evb.sh -b ds-rk3568-evb  # Use the same board name as before
 ```
 SD-card image created after successful build in the output/ds-rk35xx-evb/images directory.
+
+## Board Configuration
+The build system uses a board.cfg file to track board-specific configurations:
+- First run: You must specify your board type using -b option
+- Subsequent runs: Use the same -b option or the script will fail
+- Changing board: Remove output/ds-rk35xx-evb/board.cfg manually, then run with new -b option
+- Default configuration: If no board.cfg exists and no -b option is provided, the script uses default configuration
+
+Available options:
+- -h, --help - Show help message
+- -b, --board NAME - Set board name and create board.cfg configuration
 
 ## Notes
 - **Ensure you have at least 50 GB of free disk space** for the build.
