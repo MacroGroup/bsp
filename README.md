@@ -41,12 +41,12 @@ SD-card image created after successful build in the output/ds-rk35xx-evb/images 
 
 ## Board Configuration
 The build system uses a board.cfg file to track board-specific configurations:
-- First run: You must specify your board type using -b option
-- Subsequent runs: Use the same -b option or the script will fail
-- Changing board: Remove output/ds-rk35xx-evb/board.cfg manually, then run with new -b option
-- Default configuration: If no board.cfg exists and no -b option is provided, the script uses default configuration
+- **First run:** You must specify your board type using -b option
+- **Subsequent runs:** Use the same -b option or the script will fail
+- **Changing board:** Remove output/ds-rk35xx-evb/board.cfg manually, then run with new -b option
+- **Default configuration:** If no board.cfg exists and no -b option is provided, the script uses default configuration
 
-Available options:
+**Available options:**
 - -h, --help - Show help message
 - -b, --board NAME - Set board name and create board.cfg configuration
 
