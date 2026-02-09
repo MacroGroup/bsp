@@ -88,7 +88,13 @@ if [[ -n "$BOARD_NAME" ]]; then
 	CURRENT_BOARD=$(get_board_from_cfg "$BOARD_CFG")
 
 	if [[ -f "$BOARD_CFG" ]]; then
-		if [[ "$CURRENT_BOARD" == "$BOARD_NAME" ]]; then
+		if [[ -z "$CURRENT_BOARD" ]]; then
+			echo -e "${COLOR_YELLOW}Warning: board.cfg exists but does not contain BOARD_NAME${COLOR_RESET}"
+			echo -e "${COLOR_YELLOW}Overwriting with new board name: $BOARD_NAME${COLOR_RESET}"
+			echo "BOARD_NAME=$BOARD_NAME" >> "$BOARD_CFG"
+			echo -e "${COLOR_GREEN}Board name set to: $BOARD_NAME${COLOR_RESET}"
+			echo -e "${COLOR_GREEN}Configuration saved to: $BOARD_CFG${COLOR_RESET}"
+		elif [[ "$CURRENT_BOARD" == "$BOARD_NAME" ]]; then
 			echo -e "${COLOR_GREEN}Board name '$BOARD_NAME' matches existing configuration.${COLOR_RESET}"
 		else
 			echo -e "${COLOR_RED}Error: Board name mismatch!${COLOR_RESET}" >&2
@@ -103,12 +109,15 @@ if [[ -n "$BOARD_NAME" ]]; then
 		echo -e "${COLOR_GREEN}Configuration saved to: $BOARD_CFG${COLOR_RESET}"
 	fi
 elif [[ -f "$BOARD_CFG" ]]; then
-	echo -e "${COLOR_RED}Error: board.cfg already exists at $BOARD_CFG${COLOR_RESET}" >&2
 	CURRENT_BOARD=$(get_board_from_cfg "$BOARD_CFG")
-	if [[ -n "$CURRENT_BOARD" ]]; then
+	if [[ -z "$CURRENT_BOARD" ]]; then
+		echo -e "${COLOR_RED}Error: board.cfg exists but does not contain BOARD_NAME${COLOR_RESET}" >&2
+		echo -e "${COLOR_YELLOW}Please remove $BOARD_CFG manually or use -b option to specify a board name${COLOR_RESET}" >&2
+	else
+		echo -e "${COLOR_RED}Error: board.cfg already exists at $BOARD_CFG${COLOR_RESET}" >&2
 		echo -e "${COLOR_YELLOW}Current board name: $CURRENT_BOARD${COLOR_RESET}" >&2
+		echo -e "${COLOR_YELLOW}Please remove it manually or use -b option to specify a board name${COLOR_RESET}" >&2
 	fi
-	echo -e "${COLOR_YELLOW}Please remove it manually or use -b option to specify a board name${COLOR_RESET}" >&2
 	exit 1
 else
 	echo -e "${COLOR_YELLOW}No board.cfg found, using default configuration.${COLOR_RESET}"
