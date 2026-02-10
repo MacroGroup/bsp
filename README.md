@@ -44,7 +44,7 @@ The build system uses a board.cfg file to track board-specific configurations an
 - **BOARD_NAME** - Your board name (required for persistent configuration)
 - **BRANCH** - Buildroot branch name (optional, defaults to "macro")
 
-##Configuration Rules
+## Configuration Rules
 **1. No board.cfg exists:**
 - **With** -b **option**: Creates board.cfg with specified board name and branch
 ```bash
@@ -91,7 +91,7 @@ The build system uses a board.cfg file to track board-specific configurations an
 - -b, --board NAME - Set board\
 - -r, --branch NAME - Set buildroot branch (default: "macro")
 
-##Common Scenarios
+## Common Scenarios
 **Starting fresh (no existing config):**
 ```bash
 # Create config with board name and default branch
