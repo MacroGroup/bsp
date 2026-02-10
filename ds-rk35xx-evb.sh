@@ -18,172 +18,278 @@ else
 	COLOR_RESET=""
 fi
 
-if [ "$(id -u)" = "0" ]; then
-	echo -e "${COLOR_RED}This must be executed without root privileges!${COLOR_RESET}" >&2
-	exit 1
-fi
+SCRIPT_PATH=$(readlink -f -- "$0")
+SCRIPT_DIR=$(dirname -- "$SCRIPT_PATH")
 
-dependencies=(cut git grep head make)
-for cmd in "${dependencies[@]}"; do
-	if ! command -v "$cmd" >/dev/null 2>&1; then
-		echo -e "${COLOR_RED}Error: Required command '$cmd' not found${COLOR_RESET}" >&2
+REQUIRED_CMDS=(cut git grep head make)
+
+GIT_REPO="https://github.com/MacroGroup/buildroot"
+DEFAULT_BRANCH="macro"
+DEFCONFIG="diasom_rk35xx_evb_defconfig"
+OUTPUT_DIR="$SCRIPT_DIR/output/ds-rk35xx-evb"
+BOARD_CFG="$OUTPUT_DIR/board.cfg"
+
+print_error() { echo -e "${COLOR_RED}Error: $1${COLOR_RESET}" >&2; }
+print_warning() { echo -e "${COLOR_YELLOW}$1${COLOR_RESET}"; }
+print_success() { echo -e "${COLOR_GREEN}$1${COLOR_RESET}"; }
+print_info() { echo -e "${COLOR_CYAN}$1${COLOR_RESET}"; }
+
+check_dependencies() {
+	local missing=()
+	for cmd in "${REQUIRED_CMDS[@]}"; do
+		if ! command -v "$cmd" >/dev/null 2>&1; then
+			missing+=("$cmd")
+		fi
+	done
+
+	if [ ${#missing[@]} -gt 0 ]; then
+		print_error "Missing required commands: ${missing[*]}"
 		exit 1
 	fi
-done
+
+	if [ "$(id -u)" = "0" ]; then
+		print_error "This must be executed without root privileges!"
+		exit 1
+	fi
+}
+
+get_config_value() {
+	local cfg_file="$1"
+	local key="$2"
+	if [[ -f "$cfg_file" ]]; then
+		grep -E "^${key}=" "$cfg_file" | head -1 | cut -d'=' -f2-
+	fi
+}
+
+validate_config() {
+	local board_name="$1"
+	local branch_name="$2"
+	local config_board=""
+	local config_branch=""
+
+	if [[ -f "$BOARD_CFG" ]]; then
+		config_board=$(get_config_value "$BOARD_CFG" "BOARD_NAME")
+		config_branch=$(get_config_value "$BOARD_CFG" "BRANCH")
+
+		if [[ -n "$config_board" && -n "$board_name" && "$board_name" != "$config_board" ]]; then
+			print_error "Board name mismatch!"
+			print_error "Config: $config_board, Command line: $board_name"
+			print_warning "Remove $BOARD_CFG manually or use correct board name"
+			return 1
+		fi
+
+		if [[ -n "$config_branch" && -n "$branch_name" && "$branch_name" != "$config_branch" ]]; then
+			print_error "Branch mismatch!"
+			print_error "Config: $config_branch, Command line: $branch_name"
+			print_warning "Remove $BOARD_CFG manually or use correct branch"
+			return 1
+		fi
+
+		board_name="${board_name:-$config_board}"
+		branch_name="${branch_name:-$config_branch:-$DEFAULT_BRANCH}"
+
+		print_success "Using configuration: board=${board_name:-none}, branch=$branch_name"
+		return 0
+	fi
+
+	if [[ -n "$board_name" ]]; then
+		branch_name="${branch_name:-$DEFAULT_BRANCH}"
+		{
+			echo "BOARD_NAME=$board_name"
+			echo "BRANCH=$branch_name"
+		} > "$BOARD_CFG"
+
+		print_success "Configuration created: board=$board_name, branch=$branch_name"
+		return 0
+	else
+		branch_name="${branch_name:-$DEFAULT_BRANCH}"
+		print_warning "No board configuration, using default settings"
+		print_warning "Branch: $branch_name"
+		return 0
+	fi
+}
+
+get_build_branch() {
+	local board_name="$1"
+	local branch_name="$2"
+	local config_branch=""
+
+	if [[ -f "$BOARD_CFG" ]]; then
+		config_branch=$(get_config_value "$BOARD_CFG" "BRANCH")
+	fi
+
+	if [[ -n "$branch_name" ]]; then
+		echo "$branch_name"
+	elif [[ -n "$config_branch" ]]; then
+		echo "$config_branch"
+	else
+		echo "$DEFAULT_BRANCH"
+	fi
+}
+
+check_git_status() {
+	if [ -d ".git" ]; then
+		print_info "Checking repository status..."
+
+		if ! git fetch; then
+			print_error "Failed to fetch from remote repository"
+			exit 1
+		fi
+
+		local upstream=$(git rev-parse --abbrev-ref "@{u}" 2>/dev/null)
+
+		if [ -z "$upstream" ]; then
+			print_warning "No upstream branch configured"
+			return
+		fi
+
+		local local_commit=$(git rev-parse @)
+		local remote_commit=$(git rev-parse "$upstream")
+		local base_commit=$(git merge-base @ "$upstream")
+
+		if [ "$local_commit" != "$remote_commit" ]; then
+			if [ "$local_commit" = "$base_commit" ]; then
+				print_error "Local branch is behind remote"
+				print_warning "Run 'git pull' and retry"
+			elif [ "$remote_commit" = "$base_commit" ]; then
+				print_warning "Local branch is ahead of remote"
+			else
+				print_error "Branches have diverged"
+			fi
+			exit 1
+		fi
+
+		print_success "Repository is up-to-date"
+	else
+		print_warning "Not a git repository, skipping status check"
+	fi
+}
+
+setup_buildroot() {
+	local branch="$1"
+
+	print_info "Using branch: $branch"
+
+	if [ -d "buildroot/.git" ]; then
+		local current_branch=$(git -C "buildroot" rev-parse --abbrev-ref HEAD 2>/dev/null)
+
+		if [[ "$current_branch" != "$branch" ]]; then
+			print_warning "Buildroot is on branch '$current_branch', switching to '$branch'"
+			git -C "buildroot" checkout "$branch" || {
+				print_error "Failed to switch to branch '$branch'"
+				exit 1
+			}
+		fi
+
+		print_info "Updating buildroot repository..."
+		git -C "buildroot" pull --rebase origin "$branch" || exit 1
+		print_success "Buildroot repository updated"
+	else
+		print_info "Cloning buildroot repository..."
+		git clone -b "$branch" "$GIT_REPO" "buildroot" || exit 1
+		print_success "Buildroot repository cloned"
+	fi
+}
+
+run_build() {
+	print_info "Starting build process..."
+
+	cd "buildroot" || exit 1
+	print_info "Configuring build..."
+
+	make defconfig BR2_DEFCONFIG="configs/$DEFCONFIG" O="$OUTPUT_DIR" || exit 1
+	print_success "Configuration completed"
+
+	cd "$OUTPUT_DIR" || exit 1
+	print_info "Building project..."
+
+	if make; then
+		print_success "Build completed successfully!"
+	else
+		print_error "Build failed!"
+		exit 1
+	fi
+}
 
 show_help() {
-	echo "Usage: $0 [OPTIONS]"
-	echo ""
-	echo "Options:"
-	echo "  -h, --help           Show this help message"
-	echo "  -b, --board NAME     Set board name and create board.cfg"
-	echo ""
-	echo "If -b option is provided, creates board.cfg with BOARD_NAME=value"
+	cat << EOF
+Usage: $0 [OPTIONS]
 
+Options:
+  -h, --help           Show this help message
+  -b, --board NAME     Set board name
+  -r, --branch NAME    Set buildroot branch (default: "$DEFAULT_BRANCH")
+
+Behavior:
+  1. If board.cfg doesn't exist:
+     - With -b: creates board.cfg with board name and branch
+     - Without -b: uses default settings (no config created)
+     - Branch priority: command line (-r) > default
+
+  2. If board.cfg exists:
+     - All specified parameters must match existing values
+     - Unspecified parameters are taken from config
+     - To change any value: remove board.cfg manually
+
+Examples:
+  $0                         # Use default settings (no config)
+  $0 -b my_board             # Create config: board=my_board, branch=macro
+  $0 -b my_board -r custom   # Create config: board=my_board, branch=custom
+  $0 -r custom-branch        # Use specific branch, no config
+  $0 -b existing_board       # Use existing config (branch from config)
+  $0 -r existing_branch      # Use existing config (board from config)
+EOF
 	exit 0
 }
 
-get_board_from_cfg() {
-	local cfg_file="$1"
-	if [[ -f "$cfg_file" ]]; then
-		grep -E '^BOARD_NAME=' "$cfg_file" | head -1 | cut -d'=' -f2-
-	fi
-}
+main() {
+	local board_name=""
+	local branch_name=""
 
-BOARD_NAME=""
-while [[ $# -gt 0 ]]; do
-	case $1 in
+	while [[ $# -gt 0 ]]; do
+		case $1 in
 		-h|--help)
 			show_help
 			;;
 		-b|--board)
 			if [[ -z "$2" || "$2" =~ ^- ]]; then
-				echo -e "${COLOR_RED}Error: Board name is required for -b option${COLOR_RESET}" >&2
+				print_error "Board name is required for -b option"
 				exit 1
 			fi
-			BOARD_NAME="$2"
+			board_name="$2"
+			shift 2
+			;;
+		-r|--branch)
+			if [[ -z "$2" || "$2" =~ ^- ]]; then
+				print_error "Branch name is required for -r option"
+				exit 1
+			fi
+			branch_name="$2"
 			shift 2
 			;;
 		*)
-			echo -e "${COLOR_RED}Error: Unknown option: $1${COLOR_RESET}" >&2
+			print_error "Unknown option: $1"
 			echo "Use -h for help"
 			exit 1
 			;;
-	esac
-done
+		esac
+	done
 
-script_path=$(readlink -f -- "$0")
-ROOT=$(dirname -- "$script_path")
+	check_dependencies
+	mkdir -p "$OUTPUT_DIR"
 
-GIT=https://github.com/MacroGroup
-BRANCH=macro
-REPO=buildroot
-DEFCONFIG=diasom_rk35xx_evb_defconfig
-OUTPUT="$ROOT/output/ds-rk35xx-evb"
-BOARD_CFG="$OUTPUT/board.cfg"
-
-mkdir -p "$OUTPUT"
-
-if [[ -n "$BOARD_NAME" ]]; then
-	CURRENT_BOARD=$(get_board_from_cfg "$BOARD_CFG")
-
-	if [[ -f "$BOARD_CFG" ]]; then
-		if [[ -z "$CURRENT_BOARD" ]]; then
-			echo -e "${COLOR_YELLOW}Warning: board.cfg exists but does not contain BOARD_NAME${COLOR_RESET}"
-			echo -e "${COLOR_YELLOW}Overwriting with new board name: $BOARD_NAME${COLOR_RESET}"
-			echo "BOARD_NAME=$BOARD_NAME" >> "$BOARD_CFG"
-			echo -e "${COLOR_GREEN}Board name set to: $BOARD_NAME${COLOR_RESET}"
-			echo -e "${COLOR_GREEN}Configuration saved to: $BOARD_CFG${COLOR_RESET}"
-		elif [[ "$CURRENT_BOARD" == "$BOARD_NAME" ]]; then
-			echo -e "${COLOR_GREEN}Board name '$BOARD_NAME' matches existing configuration.${COLOR_RESET}"
-		else
-			echo -e "${COLOR_RED}Error: Board name mismatch!${COLOR_RESET}" >&2
-			echo -e "${COLOR_RED}Existing board: $CURRENT_BOARD${COLOR_RESET}" >&2
-			echo -e "${COLOR_RED}Requested board: $BOARD_NAME${COLOR_RESET}" >&2
-			echo -e "${COLOR_YELLOW}Please remove $BOARD_CFG manually or use the correct board name${COLOR_RESET}" >&2
-			exit 1
-		fi
-	else
-		echo "BOARD_NAME=$BOARD_NAME" > "$BOARD_CFG"
-		echo -e "${COLOR_GREEN}Board name set to: $BOARD_NAME${COLOR_RESET}"
-		echo -e "${COLOR_GREEN}Configuration saved to: $BOARD_CFG${COLOR_RESET}"
-	fi
-elif [[ -f "$BOARD_CFG" ]]; then
-	CURRENT_BOARD=$(get_board_from_cfg "$BOARD_CFG")
-	if [[ -z "$CURRENT_BOARD" ]]; then
-		echo -e "${COLOR_RED}Error: board.cfg exists but does not contain BOARD_NAME${COLOR_RESET}" >&2
-		echo -e "${COLOR_YELLOW}Please remove $BOARD_CFG manually or use -b option to specify a board name${COLOR_RESET}" >&2
-	else
-		echo -e "${COLOR_RED}Error: board.cfg already exists at $BOARD_CFG${COLOR_RESET}" >&2
-		echo -e "${COLOR_YELLOW}Current board name: $CURRENT_BOARD${COLOR_RESET}" >&2
-		echo -e "${COLOR_YELLOW}Please remove it manually or use -b option to specify a board name${COLOR_RESET}" >&2
-	fi
-	exit 1
-else
-	echo -e "${COLOR_YELLOW}No board.cfg found, using default configuration.${COLOR_RESET}"
-fi
-
-cd "$ROOT" || exit 1
-
-if [ -d ".git" ]; then
-	echo -e "${COLOR_CYAN}Checking repository status...${COLOR_RESET}"
-
-	if ! git fetch; then
-		echo -e "${COLOR_RED}Error: Failed to fetch from remote repository${COLOR_RESET}" >&2
+	if ! validate_config "$board_name" "$branch_name"; then
 		exit 1
 	fi
 
-	UPSTREAM=$(git rev-parse --abbrev-ref "@{u}" 2>/dev/null)
+	local build_branch=$(get_build_branch "$board_name" "$branch_name")
 
-	if [ -z "$UPSTREAM" ]; then
-		echo -e "${COLOR_YELLOW}Warning: No upstream branch configured for the current repository${COLOR_RESET}"
-	else
-		LOCAL=$(git rev-parse @)
-		REMOTE=$(git rev-parse "$UPSTREAM")
-		BASE=$(git merge-base @ "$UPSTREAM")
+	cd "$SCRIPT_DIR" || exit 1
+	check_git_status
 
-		if [ "$LOCAL" != "$REMOTE" ]; then
-			if [ "$LOCAL" = "$BASE" ]; then
-				echo -e "${COLOR_RED}The local branch lags behind the remote one!${COLOR_RESET}"
-				echo -e "${COLOR_YELLOW}Do a 'git pull' first, then re-run $0.${COLOR_RESET}"
-			elif [ "$REMOTE" = "$BASE" ]; then
-				echo -e "${COLOR_YELLOW}Local branch overtakes remote! Probably needs a push.${COLOR_RESET}"
-			else
-				echo -e "${COLOR_RED}Local and remote branches are diverged!${COLOR_RESET}"
-			fi
-			exit 1
-		else
-			echo -e "${COLOR_GREEN}Repository is up-to-date with upstream.${COLOR_RESET}"
-		fi
-	fi
-else
-	echo -e "${COLOR_YELLOW}Warning: Current directory is not a git repository, skipping repository checks${COLOR_RESET}"
-fi
+	setup_buildroot "$build_branch"
 
-echo -e "${COLOR_CYAN}Processing $REPO repository...${COLOR_RESET}"
-if [ -d "$ROOT/buildroot/.git" ]; then
-	echo -e "${COLOR_BLUE}Updating $REPO repository...${COLOR_RESET}"
-	git -C "$ROOT/$REPO" pull --rebase origin $BRANCH || exit 1
-	echo -e "${COLOR_GREEN}Repository $REPO updated successfully.${COLOR_RESET}"
-else
-	echo -e "${COLOR_BLUE}Cloning $REPO repository...${COLOR_RESET}"
-	git clone -b $BRANCH $GIT/$REPO.git "$ROOT/$REPO" || exit 1
-	echo -e "${COLOR_GREEN}Repository $REPO cloned successfully.${COLOR_RESET}"
-fi
+	run_build
+}
 
-echo -e "${COLOR_CYAN}Starting build process...${COLOR_RESET}"
-cd "$ROOT/$REPO" || exit 1
-
-echo -e "${COLOR_BLUE}Configuring build...${COLOR_RESET}"
-make defconfig BR2_DEFCONFIG=configs/$DEFCONFIG O="$OUTPUT" || exit 1
-echo -e "${COLOR_GREEN}Configuration completed successfully.${COLOR_RESET}"
-
-echo -e "${COLOR_BLUE}Building project...${COLOR_RESET}"
-cd "$OUTPUT" || exit 1
-
-if make; then
-	echo -e "${COLOR_GREEN}Build completed successfully!${COLOR_RESET}"
-else
-	echo -e "${COLOR_RED}Build failed!${COLOR_RESET}" >&2
-	exit 1
-fi
+main "$@"

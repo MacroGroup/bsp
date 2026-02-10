@@ -40,15 +40,85 @@ Subsequent builds (with existing configuration):
 SD-card image created after successful build in the output/ds-rk35xx-evb/images directory.
 
 ## Board Configuration
-The build system uses a board.cfg file to track board-specific configurations:
-- **First run:** You must specify your board type using -b option
-- **Subsequent runs:** Use the same -b option or the script will fail
-- **Changing board:** Remove output/ds-rk35xx-evb/board.cfg manually, then run with new -b option
-- **Default configuration:** If no board.cfg exists and no -b option is provided, the script uses default configuration
+The build system uses a board.cfg file to track board-specific configurations and can contain:
+- **BOARD_NAME** - Your board name (required for persistent configuration)
+- **BRANCH** - Buildroot branch name (optional, defaults to "macro")
+
+##Configuration Rules
+**1. No board.cfg exists:**
+- **With** -b **option**: Creates board.cfg with specified board name and branch
+```bash
+# Creates config: BOARD_NAME=my_board, BRANCH=macro (default)
+./ds-rk35xx-evb.sh -b my_board
+
+# Creates config: BOARD_NAME=my_board, BRANCH=custom
+./ds-rk35xx-evb.sh -b my_board -r custom
+```
+
+- **Without** -b **option**: Uses default settings (no config created)
+```bash
+# Uses default branch "macro", no board configuration
+./ds-rk35xx-evb.sh
+
+# Uses custom branch, no board configuration
+./ds-rk35xx-evb.sh -r custom-branch
+```
+
+**2. board.cfg exists:**
+- **All specified parameters must match existing values in the config**
+- **Unspecified parameters are taken from the config**
+- **To change any value: Remove board.cfg manually and start fresh**
+- **Partial configs allowed: Can contain only BOARD_NAME, only BRANCH, or both**
+
+**Examples with existing config (BOARD_NAME=my_board, BRANCH=master):**
+```bash
+# All match - OK
+./ds-rk35xx-evb.sh -b my_board -r master
+
+# Board matches, branch from config - OK
+./ds-rk35xx-evb.sh -b my_board
+
+# Branch matches, board from config - OK
+./ds-rk35xx-evb.sh -r master
+
+# Mismatch - ERROR
+./ds-rk35xx-evb.sh -b different_board  # Error: board name mismatch
+./ds-rk35xx-evb.sh -r different_branch # Error: branch mismatch
+```
 
 **Available options:**
 - -h, --help - Show help message
-- -b, --board NAME - Set board name and create board.cfg configuration
+- -b, --board NAME - Set board\
+- -r, --branch NAME - Set buildroot branch (default: "macro")
+
+##Common Scenarios
+**Starting fresh (no existing config):**
+```bash
+# Create config with board name and default branch
+./ds-rk35xx-evb.sh -b ds-rk3568-evb
+
+# Create config with board name and specific branch
+./ds-rk35xx-evb.sh -b ds-rk3588-btb-evb -r master
+
+# Build without saving config (uses default branch)
+./ds-rk35xx-evb.sh
+```
+**Using existing configuration:**
+```bash
+# Check what's in your config
+cat output/ds-rk35xx-evb/board.cfg
+
+# Build with existing config (specify matching parameters)
+./ds-rk35xx-evb.sh -b [board_from_config] -r [branch_from_config]
+```
+**Changing configuration:**
+```bash
+# Remove existing config
+rm output/ds-rk35xx-evb/board.cfg
+
+# Create new config
+./ds-rk35xx-evb.sh -b new-board -r new-branch
+```
 
 ## Notes
 - **Ensure you have at least 50 GB of free disk space** for the build.
