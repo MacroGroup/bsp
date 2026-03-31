@@ -21,7 +21,7 @@ fi
 SCRIPT_PATH=$(readlink -f -- "$0")
 SCRIPT_DIR=$(dirname -- "$SCRIPT_PATH")
 
-REQUIRED_CMDS=(bc cut file git grep head make unzip wget)
+REQUIRED_CMDS=(bc cut file git grep head make true unzip wget)
 
 GIT_REPO="https://github.com/MacroGroup/buildroot"
 DEFAULT_BRANCH="macro"
