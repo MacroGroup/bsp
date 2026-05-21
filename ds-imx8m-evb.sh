@@ -292,4 +292,11 @@ main() {
 	run_build
 }
 
+if [[ "$SCRIPT_DIR" =~ [[:space:]] ]]; then
+	print_error "The script path contains spaces: '$SCRIPT_DIR'"
+	print_error "Please move the script to a directory without spaces."
+
+	exit 1
+fi
+
 main "$@"
