@@ -29,6 +29,8 @@ DEFCONFIG="diasom_rk35xx_evb_defconfig"
 OUTPUT_DIR="$SCRIPT_DIR/output/ds-rk35xx-evb"
 BOARD_CFG="$OUTPUT_DIR/board.cfg"
 
+OFFLINE_MODE=false
+
 print_error() { echo -e "${COLOR_RED}Error: $1${COLOR_RESET}" >&2; }
 print_warning() { echo -e "${COLOR_YELLOW}$1${COLOR_RESET}"; }
 print_success() { echo -e "${COLOR_GREEN}$1${COLOR_RESET}"; }
@@ -86,7 +88,8 @@ validate_config() {
 		fi
 
 		board_name="${board_name:-$config_board}"
-		branch_name="${branch_name:-$config_branch:-$DEFAULT_BRANCH}"
+		branch_name="${branch_name:-$config_branch}"
+		branch_name="${branch_name:-$DEFAULT_BRANCH}"
 
 		print_success "Using configuration: board=${board_name:-none}, branch=$branch_name"
 		return 0
@@ -128,6 +131,15 @@ get_build_branch() {
 }
 
 check_git_status() {
+	if [ "$OFFLINE_MODE" = true ]; then
+		if [ -d ".git" ]; then
+			print_info "Offline mode: local repository exists, skipping remote checks"
+		else
+			print_warning "Not a git repository (offline mode)"
+		fi
+		return 0
+	fi
+
 	if [ -d ".git" ]; then
 		print_info "Checking repository status..."
 
@@ -169,6 +181,30 @@ setup_buildroot() {
 	local branch="$1"
 
 	print_info "Using branch: $branch"
+
+	if [ "$OFFLINE_MODE" = true ]; then
+		if [ ! -d "buildroot/.git" ]; then
+			print_error "Offline mode: buildroot directory does not exist or is not a git repository"
+			exit 1
+		fi
+
+		cd "buildroot" || exit 1
+
+		if ! git rev-parse --verify "$branch" >/dev/null 2>&1; then
+			print_error "Branch '$branch' does not exist locally in buildroot"
+			exit 1
+		fi
+
+		local current_branch=$(git rev-parse --abbrev-ref HEAD)
+		if [ "$current_branch" != "$branch" ]; then
+			print_info "Switching to branch '$branch'"
+			git checkout "$branch" || exit 1
+		fi
+
+		print_success "Buildroot repository is valid and on branch '$branch'"
+		cd ..
+		return
+	fi
 
 	if [ -d "buildroot/.git" ]; then
 		local current_branch=$(git -C "buildroot" rev-parse --abbrev-ref HEAD 2>/dev/null)
@@ -219,6 +255,13 @@ Options:
   -h, --help           Show this help message
   -b, --board NAME     Set board name
   -r, --branch NAME    Set buildroot branch (default: "$DEFAULT_BRANCH")
+  -o, --offline        Run in offline mode (skip network operations)
+
+Offline mode:
+  - Does not clone/update buildroot repository
+  - Does not fetch remote status for git repositories
+  - Validates that required local repositories exist and the branch is available
+  - Fails if buildroot is missing or the requested branch is not present locally
 
 Behavior:
   1. If board.cfg doesn't exist:
@@ -238,6 +281,7 @@ Examples:
   $0 -r custom-branch        # Use specific branch, no config
   $0 -b existing_board       # Use existing config (branch from config)
   $0 -r existing_branch      # Use existing config (board from config)
+  $0 --offline               # Run without network access (buildroot must already exist)
 EOF
 	exit 0
 }
@@ -266,6 +310,10 @@ main() {
 			fi
 			branch_name="$2"
 			shift 2
+			;;
+		-o|--offline)
+			OFFLINE_MODE=true
+			shift
 			;;
 		*)
 			print_error "Unknown option: $1"
