@@ -90,6 +90,7 @@ The build system uses a board.cfg file to track board-specific configurations an
 - -h, --help - Show help message
 - -b, --board NAME - Set board\
 - -r, --branch NAME - Set buildroot branch (default: "macro")
+- -o, --offline - Run in offline mode (skip network operations)
 
 ## Common Scenarios
 **Starting fresh (no existing config):**
@@ -120,9 +121,39 @@ rm output/ds-rk35xx-evb/board.cfg
 ./ds-rk35xx-evb.sh -b new-board -r new-branch
 ```
 
+## Offline Build Mode
+
+When you have no internet access or want to avoid repeated downloads, you can use the `--offline` (or `-o`) flag.
+
+**What happens in offline mode:**
+- The script **does not** clone or update the `buildroot` repository.
+- It **does not** run `git fetch` or `git pull` for the main repository.
+- It **validates** that the local `buildroot` directory exists and is a Git repository.
+- It **checks** that the requested branch is available locally (and switches to it if needed).
+- If `buildroot` is missing or the branch does not exist locally, the script **fails immediately**.
+
+**Important prerequisites for offline mode:**
+1. **Manual clone of `buildroot`** – you must have the repository already checked out in the script’s directory (e.g., `./buildroot/`).
+2. **Pre‑filled source cache** – Buildroot downloads external sources into `dl/` during the build.
+   For a truly offline build, you need to have all required source archives already present in `dl/`.
+   (You can prepare this cache by running a normal online build once, or by manually placing the archives.)
+
+**Example:**
+```bash
+# Prepare the environment (online, once)
+git clone https://github.com/MacroGroup/buildroot.git -b macro
+# (Optional) run a full build to populate dl/ cache
+
+# Later, offline build:
+./ds-rk35xx-evb.sh -b ds-rk3568-evb --offline
+```
+
+If the script attempts to download anything during the offline build, it will fail – make sure your `dl/` cache is complete.
+
 ## Notes
 - **Ensure you have at least 50 GB of free disk space** for the build.
 - **Build times vary significantly** (30 minutes to several hours) depending on hardware specifications
 - **All output images are ready for direct writing to SD cards** using tools like:
   - `dd` (command-line)
   - [BalenaEtcher](https://www.balena.io/etcher/) (graphical interface)
+- **Offline builds** require manual preparation of the `buildroot` repository and the `dl/` source cache – the script itself does not download anything when `--offline` is used.
