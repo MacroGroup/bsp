@@ -134,21 +134,21 @@ When you have no internet access or want to avoid repeated downloads, you can us
 
 **Important prerequisites for offline mode:**
 1. **Manual clone of `buildroot`** – you must have the repository already checked out in the script’s directory (e.g., `./buildroot/`).
-2. **Pre‑filled source cache** – Buildroot downloads external sources into `dl/` during the build.
-   For a truly offline build, you need to have all required source archives already present in `dl/`.
+2. **Pre‑filled source cache** – Buildroot downloads external sources into `output/download/` during the build.
+   For a truly offline build, you need to have all required source archives already present in `output/download/`.
    (You can prepare this cache by running a normal online build once, or by manually placing the archives.)
 
 **Example:**
 ```bash
 # Prepare the environment (online, once)
 git clone https://github.com/MacroGroup/buildroot.git -b macro
-# (Optional) run a full build to populate dl/ cache
+# (Optional) run a full build to populate output/download/ cache
 
 # Later, offline build:
 ./ds-rk35xx-evb.sh -b ds-rk3568-evb --offline
 ```
 
-If the script attempts to download anything during the offline build, it will fail – make sure your `dl/` cache is complete.
+If the script attempts to download anything during the offline build, it will fail – make sure your `output/download/` cache is complete.
 
 ## Notes
 - **Ensure you have at least 50 GB of free disk space** for the build.
@@ -156,4 +156,4 @@ If the script attempts to download anything during the offline build, it will fa
 - **All output images are ready for direct writing to SD cards** using tools like:
   - `dd` (command-line)
   - [BalenaEtcher](https://www.balena.io/etcher/) (graphical interface)
-- **Offline builds** require manual preparation of the `buildroot` repository and the `dl/` source cache – the script itself does not download anything when `--offline` is used.
+- **Offline builds** require manual preparation of the `buildroot` repository and the `output/download/` source cache – the script itself does not download anything when `--offline` is used.
