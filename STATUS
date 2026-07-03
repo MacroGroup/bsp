@@ -62,14 +62,15 @@ DS-RK3588-EVB status:
 GPIO:		OK.
 eMMC:		OK.
 SD:		OK.
-Eth RTL8211:	Not tested.
+Eth RTL8211:	OK.
 Eth RTL8125:	OK.
 PCI-e 3.0:	OK.
-ISP:		Not tested.
+CIF:		Not tested.
 HDMI TX:	OK.
 HDMI RX:	Not tested.
 LVDS:		OK.
-TypeC0 OTG:	OK (Partially).
+DP:		Not tested.
+TypeC0 Host:	OK (Partially).
 TypeC1 Host:	OK.
 USB3.0 Host:	OK.
 USB2.0 Host:	OK.
