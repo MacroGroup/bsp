@@ -34,7 +34,7 @@ HDMI:		OK.
 Sound ES8388:	OK.
 Sound HDMI:	OK.
 USB 3.0 Host:	OK.
-USB 3.0 OTG:	Host mode - OK, Device mode - not tested.
+USB 3.0 OTG:	Host mode - OK, Device mode - OK.
 Ethernet:	OK.
 I2C:		OK.
 PCI-e 2.0:	OK.
@@ -48,13 +48,11 @@ MIPI LVDS:	OK.
 NPU:		Not implemented.
 ISP:		OK.
 CIF:		Testing.
-Camera AR0233:	OK.
 Camera AR0234:	OK.
 Camera IMX327:	OK.
 Camera IMX335:	OK.
 Camera IMX415:	OK.
 Camera IMX662:	OK.
-Camera XC7160:	OK.
 
 --------------------------------------------------------------------------------
 DS-RK3588-EVB status:
@@ -65,7 +63,7 @@ SD:		OK.
 Eth RTL8211:	OK.
 Eth RTL8125:	OK.
 PCI-e 3.0:	OK.
-CIF:		Not tested.
+CIF:		OK.
 HDMI TX:	OK.
 HDMI RX:	Not tested.
 LVDS:		OK.
@@ -74,6 +72,6 @@ TypeC0 Host:	OK (Partially).
 TypeC1 Host:	OK.
 USB3.0 Host:	OK.
 USB2.0 Host:	OK.
-NPU:		Not tested.
+NPU:		OK.
 
 --------------------------------------------------------------------------------

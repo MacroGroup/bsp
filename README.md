@@ -6,7 +6,7 @@ This repository contains scripts for creating boot images used with debug boards
 *(Component versions may vary per board)*
 - **[barebox](https://barebox.org/) 2026.06+** (bootloader)
 - **[buildroot](https://buildroot.org/) 2026.05+** (root filesystem generator)
-- **[linux](https://kernel.org/) 6.19+** (Linux kernel)
+- **[linux](https://kernel.org/) 7.1+** (Linux kernel)
 
 ---
 
