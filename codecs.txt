@@ -14,7 +14,7 @@ RK3568:
 		10 - VP8:	OK (Undocumented)
 		11 - AVS
 
-	VDPU346@df80000:	Driver "rvdec": Not implemented.
+	VDPU346@df80000:	Driver "rkvdec": Not implemented.
 		0  - HEVC
 		1  - H.264
 		2  - VP9
