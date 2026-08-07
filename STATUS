@@ -57,6 +57,7 @@ Camera IMX662:	OK.
 --------------------------------------------------------------------------------
 DS-RK3588-EVB status:
 
+CAN:		Not implemented.
 GPIO:		OK.
 eMMC:		OK.
 SD:		OK.
@@ -64,6 +65,8 @@ Eth RTL8211:	OK.
 Eth RTL8125:	OK.
 PCI-e 3.0:	OK.
 CIF:		OK.
+I2C:		OK.
+ISP:		Not implemented.
 HDMI TX:	OK.
 HDMI RX:	Not tested.
 LVDS:		OK.
@@ -73,5 +76,8 @@ TypeC1 Host:	OK.
 USB3.0 Host:	OK.
 USB2.0 Host:	OK.
 NPU:		OK.
+PWM:		OK.
+SPI:		OK.
+UART:		OK.
 
 --------------------------------------------------------------------------------
