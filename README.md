@@ -88,7 +88,7 @@ The build system uses a board.cfg file to track board-specific configurations an
 
 **Available options:**
 - -h, --help - Show help message
-- -b, --board NAME - Set board\
+- -b, --board NAME - Set board name
 - -r, --branch NAME - Set buildroot branch (default: "macro")
 - -o, --offline - Run in offline mode (skip network operations)
 
