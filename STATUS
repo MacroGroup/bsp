@@ -68,7 +68,7 @@ CIF:		OK.
 I2C:		OK.
 ISP:		Not implemented.
 HDMI TX:	OK.
-HDMI RX:	Not tested.
+HDMI RX:	OK.
 LVDS:		OK.
 DP:		Not tested.
 TypeC0 Host:	OK (Partially).
