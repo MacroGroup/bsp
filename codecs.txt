@@ -11,14 +11,14 @@ RK3568:
 		10 - VP8:	OK (Undocumented)
 		11 - AVS
 
-	VDPU346@df80000:
+	VDPU346@fdf80000:
 		Driver "rkvdec": Not implemented.
 		0  - HEVC
 		1  - H.264
 		2  - VP9
 		3  - AVS2
 
-	VDPU720@ded0000:
+	VDPU720@fded0000:
 		Driver "rkdjpeg": Not implemented.
 		JPEG
 
@@ -27,7 +27,7 @@ RK3568:
 		2  - JPEG:	OK
 		3  - H.264:	No information about support.
 
-	VEPU540@df40000:
+	VEPU540@fdf40000:
 		Driver "rkvenc": Not implemented.
 		0  - H.264
 		1  - HEVC
@@ -35,7 +35,7 @@ RK3568:
 RK3588:
 	VDPU121
 	VDPU381
-	VDPU720
+	VDPU720@fdb90000
 	VDPU981
 
 	VEPU121@fdba0000,fdba4000,fdba8000,fdbac000:
