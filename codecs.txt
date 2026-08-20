@@ -1,6 +1,6 @@
 RK3568:
 	VDPU121@fdea0400:
-		Driver "vpu": OK
+		Driver "rockchip,rk3568-vpu".
 		0  - H.264:	OK
 		1  - MPEG-4
 		2  - H.263
@@ -12,35 +12,40 @@ RK3568:
 		11 - AVS
 
 	VDPU346@fdf80000:
-		Driver "rkvdec": Not implemented.
+		Driver not implemented.
 		0  - HEVC
 		1  - H.264
 		2  - VP9
 		3  - AVS2
 
 	VDPU720@fded0000:
-		Driver "rkdjpeg": Not implemented.
+		Driver not implemented.
 		JPEG
 
 	VEPU121@fdee0000:
-		Driver "vepu": OK
+		Driver "rockchip,rk3568-vepu".
 		2  - JPEG:	OK
 		3  - H.264:	No information about support.
 
 	VEPU540@fdf40000:
-		Driver "rkvenc": Not implemented.
+		Driver not implemented.
 		0  - H.264
 		1  - HEVC
 
 RK3588:
-	VDPU121
-	VDPU381
-	VDPU720@fdb90000
-	VDPU981
+	VDPU121@fdb50000:
+
+	VDPU381@fdc30000:
+
+	VDPU720@fdb90000:
+
+	VDPU981@fdc70000:
+		Driver "rockchip,rk3588-av1-vpu".
+		AV1:		OK
 
 	VEPU121@fdba0000,fdba4000,fdba8000,fdbac000:
-		Driver "vepu": OK
+		Driver "rockchip,rk3588-vepu121".
 		0  - JPEG:	OK
 		1  - H.264:	Not supported by datasheet.
 
-	VEPU580
+	VEPU580@fdbd0000,fdbe000:
