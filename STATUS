@@ -57,7 +57,7 @@ Camera IMX662:	OK.
 --------------------------------------------------------------------------------
 DS-RK3588-EVB status:
 
-CAN:		Not implemented.
+CAN:		OK.
 GPIO:		OK.
 eMMC:		OK.
 SD:		OK.
