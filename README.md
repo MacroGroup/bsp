@@ -20,7 +20,7 @@ cd bsp
 ```
 SD-card image created after successful build in the output/ds-imx8m-evb/images directory.
 
-### For DS-RK3568-EVB or DS-RK3588-BTB-EVB:
+### For DS-RK3568-EVB, DS-RK3568-SODIMM-EVB or DS-RK3588-BTB-EVB:
 ```bash
 git clone https://github.com/MacroGroup/bsp.git
 cd bsp
@@ -29,6 +29,9 @@ First build - specify your board type:
 ```bash
 # For DS-RK3568-EVB board:
 ./ds-rk35xx-evb.sh -b ds-rk3568-evb
+
+# For DS-RK3568-SODIMM-EVB board:
+./ds-rk35xx-evb.sh -b ds-rk3568-sodimm-evb
 
 # For DS-RK3588-BTB-EVB board:
 ./ds-rk35xx-evb.sh -b ds-rk3588-btb-evb
@@ -99,7 +102,7 @@ The build system uses a board.cfg file to track board-specific configurations an
 ./ds-rk35xx-evb.sh -b ds-rk3568-evb
 
 # Create config with board name and specific branch
-./ds-rk35xx-evb.sh -b ds-rk3588-btb-evb -r master
+./ds-rk35xx-evb.sh -b ds-rk3568-evb -r master
 
 # Build without saving config (uses default branch)
 ./ds-rk35xx-evb.sh
