@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: GPL-2.0+
 # SPDX-FileCopyrightText: Alexander Shiyan <shc_work@mail.ru>
 
+hash -r
+
 if [ -t 1 ]; then
 	COLOR_RED='\033[0;31m'
 	COLOR_YELLOW='\033[0;33m'
@@ -39,8 +41,10 @@ print_info() { echo -e "${COLOR_CYAN}$1${COLOR_RESET}"; }
 check_dependencies() {
 	local missing=()
 	for cmd in "${REQUIRED_CMDS[@]}"; do
-		if ! command -v "$cmd" >/dev/null 2>&1; then
-			missing+=("$cmd")
+		if [ "$cmd" = "true" ]; then
+			command -v "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
+		else
+			type -P "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
 		fi
 	done
 
