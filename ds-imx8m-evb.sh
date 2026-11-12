@@ -41,11 +41,7 @@ print_info() { echo -e "${COLOR_CYAN}$1${COLOR_RESET}"; }
 check_dependencies() {
 	local missing=()
 	for cmd in "${REQUIRED_CMDS[@]}"; do
-		if [ "$cmd" = "true" ]; then
-			command -v "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
-		else
-			type -P "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
-		fi
+		type -P "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
 	done
 
 	if [ ${#missing[@]} -gt 0 ]; then
